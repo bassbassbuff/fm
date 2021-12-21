@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 
-from apps.client.models import Client
+from clients.models import Client
 
 
 

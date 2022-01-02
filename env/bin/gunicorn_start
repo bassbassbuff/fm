@@ -1,0 +1,29 @@
+#!/bin/bash
+
+NAME="fm"
+DJANGODIR=/home/wakili/backend
+SOCKFILE=/home/wakili/backend/env/run/gunicorn.sock
+USER=root
+GROUP=sudo
+NUM_WORKERS=3
+DJANGO_SETTINGS_MODULE=/home/wakili/backend/fm/settings fm.wsgi
+DJANGO_WSGI_MODULE=fm.wsgi
+
+echo "Starting"
+
+cd $DJANGODIR
+source ./env/bin/activate
+export PYTHONPATH=/home/wakili/env/bin
+export DJANGO_SETTINGS_MODULE=$DJANGO_SETTINGS_MODULE
+# export PYTHONPATH=$DJANGODIR:$PYTHONPATH
+
+RUNDIR=$(dirname $SOCKFILE)
+test -d $RUNDIR || mkdir -p $RUNDIR
+
+exec ./env/bin/gunicorn ${DJANGO_WSGI_MODULE}: application  \
+  --name $NAME \
+  --workers $NUM_WORKERS \
+  --user=$USER --group=$GROUP \
+  --bind=unix:$SOCKFILE \
+  --log-level=debug \
+  --log-file=-

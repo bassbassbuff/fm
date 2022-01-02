@@ -15,6 +15,8 @@ import os
 from django.core.management.utils import get_random_secret_key
 import sys
 import dj_database_url
+env = os.environ.copy()
+# SECRET_KEY = env['SECRET_KEY']
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,12 +27,30 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
-SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", get_random_secret_key())
+SECRET_KEY = os.getenv('SECRET_KEY', get_random_secret_key())
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["143.244.133.202"]
+ALLOWED_HOSTS = ["143.244.133.202", "0.0.0.0"]
+
+
+CORS_ALLOWED_ORIGINS = [
+
+    ".mywakili.co.ke",
+    "http://localhost:8080",
+    "http://143.244.133.202",
+    "http://127.0.0.1:8000"
+]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    )
+}
 
 
 # Application definition
@@ -140,3 +160,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 # Uncomment if you have extra static files and a directory in your GitHub repo.
 # If you don't have this directory and have this uncommented your build will fail
 # STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
